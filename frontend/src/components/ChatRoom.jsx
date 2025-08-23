@@ -18,7 +18,21 @@ const ChatRoom = () => {
   useEffect(() => {
     socket.emit("join_room", roomId);
 
+    const fetchMessages = async () => {
+      const res = await fetch(`http://localhost:3001/api/messages/${roomId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+      setMessages(data);
+    };
+
     // Listen for messages
+    fetchMessages();
+
     socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
@@ -31,11 +45,14 @@ const ChatRoom = () => {
   // Send a message
   const sendMessage = () => {
     if (message.trim() !== "") {
-      socket.emit("send_message", {
+      const msgData = {
         roomId: 1,
         userId: user.id,
+        username: user.username,
         content: message,
-      });
+      };
+      socket.emit("send_messages", msgData);
+      setMessages((prev) => [...prev, msgData]);
       setMessage("");
     }
   };
@@ -49,7 +66,7 @@ const ChatRoom = () => {
         <div className="border p-3 h-64 overflow-y-auto mb-3 rounded">
           {messages.map((msg, idx) => (
             <div key={idx} className="mb-2">
-              <span className="font-semibold">{msg.userId}: </span>
+              <span className="font-semibold">{msg.username}: </span>
               {msg.content}
             </div>
           ))}

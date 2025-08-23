@@ -6,7 +6,7 @@ const mysql = require("mysql2/promise");
 const dotenv = require("dotenv");
 const pool = require("./db");
 const authRoutes = require("./routes/authRoutes");
-
+const messagesRoutes = require("./routes/messagesRoutes");
 dotenv.config();
 
 const app = express();
@@ -27,6 +27,7 @@ app.use(
 );
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.use("/api/messages", messagesRoutes);
 
 app.get("/", (req, res) => {
   res.send("Chat app is running");
@@ -61,6 +62,11 @@ io.on("connection", (socket) => {
   });
 });
 
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+  console.log("Server is running");
+});
+
 //   io.on("connection", (socket) => {
 //     console.log("User connected", socket.id);
 
@@ -83,8 +89,3 @@ io.on("connection", (socket) => {
 //       console.log("User disconnected", socket.id);
 //     });
 //   });
-
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-  console.log("Server is running");
-});
