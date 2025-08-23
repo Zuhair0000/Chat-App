@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -20,6 +21,7 @@ export default function Register() {
         setError(data.message || "Registration failed");
         return;
       }
+      toast.success("Registered Successfully");
 
       // onRegister(data.user); // pass user back to parent
     } catch (err) {

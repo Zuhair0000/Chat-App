@@ -26,6 +26,9 @@ export default function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       navigate("/chat");
+      setUsername("");
+      setPassword("");
+
       // onLogin(data.user); // pass user back to parent
     } catch (err) {
       setError("Something went wrong", err.message);
