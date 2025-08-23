@@ -3,14 +3,16 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const startDB = async () => {
-  const db = await mysql.createConnection({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASS || "",
-    database: process.env.DB_NAME || "chat_app",
-  });
-  console.log("Connected to MySQL");
-};
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "",
+  database: process.env.DB_NAME || "chat_app",
+});
 
-module.exports = startDB;
+pool
+  .getConnection()
+  .then(() => console.log("MySQL pool connected"))
+  .catch((err) => console.error("DB connection failed: ", err.message));
+
+module.exports = pool;
