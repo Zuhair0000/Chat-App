@@ -1,7 +1,7 @@
 const pool = require("../db");
 
 exports.getMessagesByRoom = async (req, res) => {
-  const { roomName } = req.params;
+  const { roomId } = req.params;
 
   try {
     const [messages] = await pool.execute(
@@ -10,13 +10,13 @@ exports.getMessagesByRoom = async (req, res) => {
       FROM messages msg
       JOIN users u ON msg.user_id = u.id
       JOIN rooms r ON msg.room_id = r.id
-      WHERE r.name = ?
+      WHERE msg.room_id = ?
       ORDER BY msg.created_at ASC
       `,
-      [roomName]
+      [roomId]
     );
     if (messages.length === 0) {
-      res.json({ message: "failed to fetch messages" });
+      return res.json([]);
     }
     res.json(messages);
   } catch (err) {

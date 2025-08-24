@@ -22,8 +22,6 @@ export default function Register() {
         return;
       }
       toast.success("Registered Successfully");
-
-      // onRegister(data.user); // pass user back to parent
     } catch (err) {
       setError("Something went wrong", err.message);
     }
